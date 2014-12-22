@@ -8,12 +8,15 @@
  */
 
 #include <pebble.h>
+/* Function prototypes */
+static void init_pokemenu1(int index, void *context);
 /* Main Menu */
 #define MAIN_MENU_SECTIONS 2
 #define MM_POKEMENU_ITEMS 1
 #define MM_OTHER_ITEMS 3
 
-static Window *s_main_window;
+static Window *s_main_window = NULL;
+static Window *s_pokemenu1_window = NULL;
 
 static SimpleMenuLayer *main_menu;
 
@@ -33,13 +36,13 @@ static SimpleMenuSection mm_sections[MAIN_MENU_SECTIONS];
 static SimpleMenuItem mm_pokemenu[MM_POKEMENU_ITEMS];
 static SimpleMenuItem mm_other[MM_OTHER_ITEMS];
 
-
 static void setup_mm_items() {
   for(int i = 0; i < MM_POKEMENU_ITEMS; i++) {
     mm_pokemenu[i] = (SimpleMenuItem){
       .title = mm_pokemenu_names[i]
     };
   }
+  mm_pokemenu[0].callback = init_pokemenu1;
   for(int i = 0; i < MM_OTHER_ITEMS; i++) {
     mm_other[i] = (SimpleMenuItem){
       .title = mm_other_names[i]
@@ -69,7 +72,25 @@ static void main_window_load(Window *window) {
 }
 
 static void main_window_unload(Window *window) {
+  simple_menu_layer_destroy(main_menu);
+}
+/* Pokemon Menu */
+static void pokemenu1_window_load(Window *window){
+  //Layer *window_layer = window_get_root_layer(s_pokemenu1_window);
 
+}
+static void pokemenu1_window_unload(Window *window) {
+  //simple_menu_layer_destroy(s_pokemenu1_window);
+}
+static void init_pokemenu1(int index, void *context){
+  s_pokemenu1_window = window_create();
+
+  window_set_window_handlers(s_pokemenu1_window, (WindowHandlers) {
+    .load = pokemenu1_window_load,
+    .unload = pokemenu1_window_unload
+  });
+
+  window_stack_push(s_pokemenu1_window, true);
 }
 
 /* Initializer/Deinitializer */
@@ -90,7 +111,6 @@ static void init(void) {
 }
 
 static void deinit(void) {
-  simple_menu_layer_destroy(main_menu);
   window_destroy(s_main_window);
 }
 
