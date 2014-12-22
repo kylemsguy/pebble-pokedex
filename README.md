@@ -1,3 +1,3 @@
 pebble-pokedex
 ==============
-A pokedex for the Pebble
+A pokedex for the Pebble using the PokeAPI
