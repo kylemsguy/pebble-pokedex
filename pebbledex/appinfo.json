@@ -1,7 +1,7 @@
 {
   "uuid": "d3519aed-0f97-40f4-b441-e53015c5085c",
-  "shortName": "pebbledex",
-  "longName": "pebbledex",
+  "shortName": "PebbleDex",
+  "longName": "PebbleDex",
   "companyName": "MakeAwesomeHappen",
   "versionCode": 1,
   "versionLabel": "1.0",
@@ -12,6 +12,18 @@
     "dummy": 0
   },
   "resources": {
-    "media": []
+    "media": [
+      {
+        "type": "png",
+        "name": "POKE_BALL",
+        "file": "pokeball.png"
+      },
+      {
+        "menuIcon": true,
+        "type": "png",
+        "name": "IMAGE_MENU_ICON",
+        "file": "icon.png"
+      }
+    ]
   }
 }

@@ -8,67 +8,96 @@
  */
 
 #include <pebble.h>
-#define MAIN_MENU_SECTIONS 3
+/* Main Menu */
+#define MAIN_MENU_SECTIONS 2
+#define MM_POKEMENU_ITEMS 1
+#define MM_OTHER_ITEMS 3
 
-static Window *window;
+static Window *s_main_window;
 
-static SimpleMenuLayer main_menu;
-static char *main_menu_choices[] = {
-  "Pokémon",
-  "Types",
-  "Moves",
-  "Abilities",
-  "Egg Groups"
+static SimpleMenuLayer *main_menu;
+
+// first section of the main menu
+static char *mm_pokemenu_names[MM_POKEMENU_ITEMS] = {
+  "Pokémon"
 };
 
-static void select_click_handler(ClickRecognizerRef recognizer, void *context) {
+// second section of the main menu
+static char *mm_other_names[MM_OTHER_ITEMS] = {
+  "Types",
+  "Moves",
+  "Abilities"
+};
 
+static SimpleMenuSection mm_sections[MAIN_MENU_SECTIONS];
+static SimpleMenuItem mm_pokemenu[MM_POKEMENU_ITEMS];
+static SimpleMenuItem mm_other[MM_OTHER_ITEMS];
+
+
+static void setup_mm_items() {
+  for(int i = 0; i < MM_POKEMENU_ITEMS; i++) {
+    mm_pokemenu[i] = (SimpleMenuItem){
+      .title = mm_pokemenu_names[i]
+    };
+  }
+  for(int i = 0; i < MM_OTHER_ITEMS; i++) {
+    mm_other[i] = (SimpleMenuItem){
+      .title = mm_other_names[i]
+    };
+  }
 }
 
-static void up_click_handler(ClickRecognizerRef recognizer, void *context) {
-
+static void setup_mm_sections() {
+  mm_sections[0] = (SimpleMenuSection){
+    .title = "Pokémon Data",
+    .items = mm_pokemenu,
+    .num_items = MM_POKEMENU_ITEMS
+  };
+  mm_sections[1] = (SimpleMenuSection){
+    .title = "Attribute Data",
+    .items = mm_other,
+    .num_items = MM_OTHER_ITEMS
+  };
 }
 
-static void down_click_handler(ClickRecognizerRef recognizer, void *context) {
-
-}
-
-static void click_config_provider(void *context) {
-
-}
-
-static void window_load(Window *window) {
-  Layer *window_layer = window_get_root_layer(window);
+static void main_window_load(Window *window) {
+  Layer *window_layer = window_get_root_layer(s_main_window);
   GRect bounds = layer_get_bounds(window_layer);
 
-  main_menu = simple_menu_layer_create(bounds, window, main_menu_sections, MAIN_MENU_SECTIONS, NULL)
+  main_menu = simple_menu_layer_create(bounds, window, mm_sections, MAIN_MENU_SECTIONS, NULL);
+  layer_add_child(window_layer, simple_menu_layer_get_layer(main_menu));
+}
 
+static void main_window_unload(Window *window) {
 
 }
 
-static void window_unload(Window *window) {
-  simple_menu_layer_destroy(main_menu);
-}
+/* Initializer/Deinitializer */
 
 static void init(void) {
-  window = window_create();
-  window_set_click_config_provider(window, click_config_provider);
-  window_set_window_handlers(window, (WindowHandlers) {
-    .load = window_load,
-    .unload = window_unload,
+  setup_mm_items();
+  setup_mm_sections();
+
+  s_main_window = window_create();
+
+  window_set_window_handlers(s_main_window, (WindowHandlers) {
+    .load = main_window_load,
+    .unload = main_window_unload
   });
-  const bool animated = true;
-  window_stack_push(window, animated);
+
+  static bool animated = true;
+  window_stack_push(s_main_window, animated);
 }
 
 static void deinit(void) {
-  window_destroy(window);
+  simple_menu_layer_destroy(main_menu);
+  window_destroy(s_main_window);
 }
 
 int main(void) {
   init();
 
-  APP_LOG(APP_LOG_LEVEL_DEBUG, "Done initializing, pushed window: %p", window);
+  APP_LOG(APP_LOG_LEVEL_DEBUG, "Done initializing, pushed window: %p", s_main_window);
 
   app_event_loop();
   deinit();
