@@ -1,0 +1,17 @@
+{
+  "uuid": "d3519aed-0f97-40f4-b441-e53015c5085c",
+  "shortName": "pebbledex",
+  "longName": "pebbledex",
+  "companyName": "MakeAwesomeHappen",
+  "versionCode": 1,
+  "versionLabel": "1.0",
+  "watchapp": {
+    "watchface": false
+  },
+  "appKeys": {
+    "dummy": 0
+  },
+  "resources": {
+    "media": []
+  }
+}
