@@ -1,38 +1,53 @@
+/**
+ * Planned Functionality:
+ * Have a menu for Pokemon, Moves, etc.
+ * Pokemon menu:
+ *   Sprite at left, number/name on right, misc info as subtitle
+ * Pokemon Entry:
+ *   Full sprite, description, type, etc.
+ */
+
 #include <pebble.h>
+#define MAIN_MENU_SECTIONS 3
 
 static Window *window;
-static TextLayer *text_layer;
+
+static SimpleMenuLayer main_menu;
+static char *main_menu_choices[] = {
+  "Pokémon",
+  "Types",
+  "Moves",
+  "Abilities",
+  "Egg Groups"
+};
 
 static void select_click_handler(ClickRecognizerRef recognizer, void *context) {
-  text_layer_set_text(text_layer, "Select");
+
 }
 
 static void up_click_handler(ClickRecognizerRef recognizer, void *context) {
-  text_layer_set_text(text_layer, "Up");
+
 }
 
 static void down_click_handler(ClickRecognizerRef recognizer, void *context) {
-  text_layer_set_text(text_layer, "Down");
+
 }
 
 static void click_config_provider(void *context) {
-  window_single_click_subscribe(BUTTON_ID_SELECT, select_click_handler);
-  window_single_click_subscribe(BUTTON_ID_UP, up_click_handler);
-  window_single_click_subscribe(BUTTON_ID_DOWN, down_click_handler);
+
 }
 
 static void window_load(Window *window) {
   Layer *window_layer = window_get_root_layer(window);
   GRect bounds = layer_get_bounds(window_layer);
 
-  text_layer = text_layer_create((GRect) { .origin = { 0, 72 }, .size = { bounds.size.w, 20 } });
-  text_layer_set_text(text_layer, "Press a button");
-  text_layer_set_text_alignment(text_layer, GTextAlignmentCenter);
-  layer_add_child(window_layer, text_layer_get_layer(text_layer));
+  main_menu = simple_menu_layer_create(bounds, window, main_menu_sections, MAIN_MENU_SECTIONS, NULL)
+
+
 }
 
 static void window_unload(Window *window) {
-  text_layer_destroy(text_layer);
+  simple_menu_layer_destroy(main_menu);
 }
 
 static void init(void) {
